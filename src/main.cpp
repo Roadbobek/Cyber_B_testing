@@ -105,8 +105,26 @@ static const uint8_t forcyberb160x80image1[] PROGMEM  = {
 const int TFT_WIDTH = 160;
 const int TFT_HEIGHT = 80;
 
+// Values for the debugMode serial monitor heartbeat functionality.
+unsigned long previousMillis = 0; // Store the last time heartbeat was printed
+const long interval = 1000; // 1 second interval
 
+bool debugMode = true; // Set to true to enable debug functionality like serial output!
+
+// The setup() function runs once when you press reset or power on the board.
 void setup() {
+  if (debugMode) {
+  // Initialize serial communication at 9600 bits per second:
+  Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for serial port to connect. Needed for native USB port only.
+  }
+  Serial.println("Hello from your Cyber B Necklace!"); // Print a welcome message to the serial monitor
+  }
+
+  // Setup BT6 on the board, which is our only usable button.
+  pinMode(6, INPUT_PULLUP); // Set pin 6 as input with internal pull-up resistor for the button, making its default state HIGH, and LOW when pressed.
+
   // Initialize the TFT display
   // Turn on the backlight
   pinMode(TFT_BACKLIGHT, OUTPUT);
@@ -182,20 +200,27 @@ void setup() {
   tft.setTextColor(ST77XX_MAGENTA);
   tft.setTextSize(1);
   tft.println("Roadbobek");
-
-
-  // Initialize serial communication at 9600 bits per second:
-  Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for serial port to connect. Needed for native USB port only.
-  }
-  
-  Serial.println("Hello from your Cyber B Necklace!");
 }
 
+
+// The loop() function runs over and over again forever after setup() has completed.
 void loop() {
-  // The loop() function runs over and over again forever.
-  // For this example, we don't need to do anything here.
-  delay(1000);
-  Serial.println("Still here!");
+  // This code runs when debugMode is true
+  if (debugMode) {
+    
+  // Check if interval (1 second) has passed to print heartbeat message.
+  unsigned long currentMillis = millis(); // Get the current time from startup
+  // If the difference between current time and last printed time is more than the interval, print the heartbeat message.
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+    Serial.println("Heartbeat, still here gang!");
+  }
+
+  // Print a message to serial monitor if button 6 is pressed.
+  if (digitalRead(6) == LOW) {
+    Serial.println("Button Pressed!");
+    delay(200); // Debounce delay
+  }
+  }
+
 }
