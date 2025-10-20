@@ -15,7 +15,8 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RS
 #define FORCYBERB160X80IMAGE1_HEIGHT 80
 #define FORCYBERB160X80IMAGE1_WIDTH 160
 
-// array size is 1600
+// This is a 160x80 pixel png that i put through https://mischianti.org/rgb-image-to-byte-array-converter-for-arduino-tft-displays/. Pallete mod: 1 bit line art, Data type: uint8_t.
+// array size is 1600 bytes
 static const uint8_t forcyberb160x80image1[] PROGMEM  = {
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
   0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff, 
@@ -113,7 +114,7 @@ void setup() {
   // delay(500); // Add a short delay before initializing the display.
 
   // Initialize configuration for the TFT display.
-  tft.initR(INITR_GREENTAB);
+  tft.initR();
 
   tft.setRotation(3); // Set desired rotation (landscape)
 
