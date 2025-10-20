@@ -167,7 +167,7 @@ void setup() {
     FORCYBERB160X80IMAGE1_HEIGHT, // Image height (80)
     ST77XX_WHITE,   // The color for the "1"s in your image (foreground)
     ST77XX_BLACK    // The color for the "0"s in your image (background)
-);
+  );
 
 
   // Initialize serial communication at 9600 bits per second:
