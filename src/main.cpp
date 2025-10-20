@@ -2,6 +2,7 @@
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_ST7735.h>
+#include <Fonts/FreeSansBold9pt7b.h>
 
 const int TFT_CS = 1;
 const int TFT_DC = 0;
@@ -122,52 +123,65 @@ void setup() {
   tft.invertDisplay(true);
 
   // Test different colors on the display
+  // Some ready-made 16-bit ('565') color settings
   tft.fillScreen(ST77XX_WHITE);
   tft.fillScreen(ST77XX_RED);
   tft.fillScreen(ST77XX_GREEN);
   tft.fillScreen(ST77XX_BLUE);
+  tft.fillScreen(ST77XX_CYAN);
+  tft.fillScreen(ST77XX_MAGENTA);
+  tft.fillScreen(ST77XX_YELLOW);
+  tft.fillScreen(ST77XX_ORANGE);
   tft.fillScreen(ST77XX_BLACK);
   
   // // Black background
   // tft.fillScreen(ST77XX_BLACK);
 
-  // Draw some text
-  tft.setCursor(0, 24);
-  tft.setTextColor(ST77XX_BLUE);
-  tft.setTextSize(2);
-  tft.println("Roadbobek");
+  // Set text font
+  tft.setFont(&FreeSansBold9pt7b);
 
-  // Draw more some text
+  // Draw some text
+  // The default fonts origin is the top left corner of the text bounding box, we use (0,24) to align it properly below the top edge of the display.
+  // The new font's origin is at the baseline of the text, so we set the cursor to (0,36) to align it properly below the top edge of the display.
+  tft.setCursor(0, 36);
   tft.setTextColor(ST77XX_WHITE);
-  tft.setTextSize(2);
+  tft.setTextSize(1);
   tft.println("Roadbobek");
 
   // Even more text
-  tft.setTextColor(ST77XX_RED);
-  tft.setTextSize(2);
+  tft.setTextColor(ST77XX_CYAN);
+  tft.setTextSize(1);
   tft.println("Roadbobek");
 
-  // Even even more text
-  tft.setTextColor(ST77XX_CYAN);
-  tft.setTextSize(2);
+  // Draw some more text
+  tft.setTextColor(ST77XX_MAGENTA);
+  tft.setTextSize(1);
   tft.println("Roadbobek");
 
   // Even even even more text
-  tft.setTextColor(ST77XX_MAGENTA);
-  tft.setTextSize(2);
+  tft.setTextColor(ST77XX_BLUE);
+  tft.setTextSize(1);
   tft.println("Roadbobek");
 
-  delay(2000); // Wait for 2 seconds to view the display
+  delay(2000); // Wait for 2 seconds to view the text
 
+  // Display the image
   tft.drawBitmap(
     0,   // X position
-    24,  // Y position
+    24,  // Y position, to align top left of the bitmap with the display, same as with default text font.
     forcyberb160x80image1, // Pointer to the image array
     FORCYBERB160X80IMAGE1_WIDTH, // Image width (160)
     FORCYBERB160X80IMAGE1_HEIGHT, // Image height (80)
     ST77XX_WHITE,   // The color for the "1"s in your image (foreground)
     ST77XX_BLACK    // The color for the "0"s in your image (background)
   );
+
+  delay(2000);
+
+  tft.setCursor(32, 97);
+  tft.setTextColor(ST77XX_MAGENTA);
+  tft.setTextSize(1);
+  tft.println("Roadbobek");
 
 
   // Initialize serial communication at 9600 bits per second:
