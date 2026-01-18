@@ -20,6 +20,8 @@ const int16_t SCREEN_HEIGHT = 80;
 // --- Animation Variables ---
 // The off-screen canvas has been removed for diagnostic purposes.
 uint16_t textWidth, textHeight;    // Use uint16_t for correct type from getTextBounds
+uint16_t boxWidth, boxHeight;      // Dimensions of the logo box
+const int PADDING = 4;             // Padding around the text
 int16_t textX, textY;              // Current position of the text's top-left corner
 int16_t oldTextX, oldTextY;        // Previous position of the text
 int xSpeed = 6;                    // Horizontal speed in pixels per frame
@@ -41,10 +43,12 @@ void setup() {
   tft.setTextSize(1);
   // Get the bounding box of the text to know its width and height.
   tft.getTextBounds(text, 0, 0, &x1, &y1, &textWidth, &textHeight);
+  boxWidth = textWidth + (2 * PADDING);
+  boxHeight = textHeight + (2 * PADDING);
 
   // --- Initialize Animation Position ---
   textX = 0;
-  textY = (SCREEN_HEIGHT - textHeight) / 2; // Center vertically
+  textY = (SCREEN_HEIGHT - boxHeight) / 2; // Center vertically
   oldTextX = textX;
   oldTextY = textY;
 }
@@ -62,20 +66,20 @@ void loop() {
   textY += ySpeed;
 
   // Check for collision with horizontal screen edges and reverse direction
-  if ((textX + textWidth) >= SCREEN_WIDTH) {
-    textX = SCREEN_WIDTH - textWidth; // Clamp to edge
+  if ((textX + boxWidth) >= SCREEN_WIDTH) {
+    textX = SCREEN_WIDTH - boxWidth; // Clamp to edge
     xSpeed = -xSpeed; // Reverse direction
-  } else if (textX < 0) {
-    textX = 0; // Clamp to edge
+  } else if (textX < 1) {
+    textX = 1; // Clamp to edge
     xSpeed = -xSpeed; // Reverse direction
   }
 
   // Check for collision with vertical screen edges and reverse direction
-  if ((textY + textHeight) >= SCREEN_HEIGHT) {
-    textY = SCREEN_HEIGHT - textHeight; // Clamp to edge
+  if ((textY + boxHeight) >= SCREEN_HEIGHT) {
+    textY = SCREEN_HEIGHT - boxHeight; // Clamp to edge
     ySpeed = -ySpeed; // Reverse direction
-  } else if (textY < 0) {
-    textY = 0; // Clamp to edge
+  } else if (textY < 2) {
+    textY = 2; // Clamp to edge
     ySpeed = -ySpeed; // Reverse direction
   }
 
@@ -84,7 +88,7 @@ void loop() {
   // 1. Erase the old text's bounding box
   // This is less efficient than the canvas method and will cause flicker.
   if (textX != oldTextX || textY != oldTextY) {
-      tft.fillRect(oldTextX, oldTextY, textWidth, textHeight, ST77XX_BLACK);
+      tft.fillRect(oldTextX, oldTextY, boxWidth, boxHeight, ST77XX_BLACK);
   }
 
   // 2. Draw the text directly to the screen
@@ -92,9 +96,13 @@ void loop() {
   tft.setFont(&FreeSansBold9pt7b);
   tft.setTextSize(1);
   tft.setTextColor(ST77XX_WHITE);
+
+  // Draw the box around the text
+  tft.drawRect(textX, textY, boxWidth, boxHeight, ST77XX_CYAN);
+
   // Set the cursor based on where the top-left corner should be.
   // (textX, textY) is the top-left, but setCursor wants the baseline start.
   // The (x1,y1) values from getTextBounds tell us the offset.
-  tft.setCursor(textX - x1, textY - y1);
+  tft.setCursor(textX + PADDING - x1, textY + PADDING - y1);
   tft.print(text);
 }
