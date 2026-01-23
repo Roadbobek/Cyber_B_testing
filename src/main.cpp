@@ -26,7 +26,7 @@ int16_t textX, textY;              // Current position of the text's top-left co
 int16_t oldTextX, oldTextY;        // Previous position of the text
 int xSpeed = 6;                    // Horizontal speed in pixels per frame
 int ySpeed = 4;                    // Vertical speed in pixels per frame
-const char* text = "Roadbobek";
+const char* text = "BOBEK";
 int16_t x1, y1;                    // Store text boundary offsets from getTextBounds
 
 void setup() {
